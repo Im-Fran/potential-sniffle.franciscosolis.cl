@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit3, Trash2, Search, User, Calendar, MapPin, Star, Clock } from 'lucide-react';
+import { Plus, Edit3, Search, User, MapPin, Star, Clock } from 'lucide-react';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import type { Profesional, Sucursal } from '../../types/domain';
 

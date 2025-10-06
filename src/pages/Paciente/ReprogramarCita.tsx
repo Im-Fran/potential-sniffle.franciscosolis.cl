@@ -87,7 +87,7 @@ export function ReprogramarCita() {
     }
   };
 
-  const handleFechaChange = (fecha: string) => {
+  const handleFechaSelect = (fecha: string) => {
     setFechaSeleccionada(fecha);
     setHoraSeleccionada('');
     if (fecha) {
@@ -95,7 +95,7 @@ export function ReprogramarCita() {
     }
   };
 
-  const handleHoraChange = (hora: string) => {
+  const handleHoraSelect = (hora: string) => {
     setHoraSeleccionada(hora);
     setStep('confirmacion');
   };
@@ -292,10 +292,9 @@ export function ReprogramarCita() {
             <div className="p-6">
               <DatePicker
                 selectedDate={fechaSeleccionada}
-                onDateSelect={handleFechaChange}
+                onDateSelect={handleFechaSelect}
                 minDate={obtenerFechaHoyChile()}
-                maxDate={new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                excludeWeekends={false}
+                maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
               />
             </div>
           </div>
@@ -332,8 +331,9 @@ export function ReprogramarCita() {
               ) : (
                 <TimeSlotGrid
                   slots={slots || []}
-                  selectedTime={horaSeleccionada}
-                  onTimeSelect={handleHoraChange}
+                  onHoraSelect={handleHoraSelect}
+                  selectedHora={horaSeleccionada}
+                  duracionServicio={citaOriginal?.duracionMinutos || 30}
                 />
               )}
             </div>
@@ -384,9 +384,13 @@ export function ReprogramarCita() {
                         <span className="text-green-700">Horario:</span>
                         <span className="font-medium text-green-900">
                           {horaSeleccionada} - {
-                            new Date(`2000-01-01T${horaSeleccionada}:00`)
-                              .setMinutes(new Date(`2000-01-01T${horaSeleccionada}:00`).getMinutes() + citaOriginal.duracionMinutos)
-                              .toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hour12: false })
+                            (() => {
+                              const [horas, minutos] = horaSeleccionada.split(':').map(Number);
+                              const totalMinutos = horas * 60 + minutos + citaOriginal.duracionMinutos;
+                              const nuevasHoras = Math.floor(totalMinutos / 60);
+                              const nuevosMinutos = totalMinutos % 60;
+                              return `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}`;
+                            })()
                           }
                         </span>
                       </div>

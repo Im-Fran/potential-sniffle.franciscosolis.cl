@@ -117,7 +117,7 @@ export function generarSlotsDisponibilidad(
       horaInicio: horaInicioSlot,
       horaFin: horaFinSlot,
       disponible: !hayConflicto.tieneConflicto,
-      motivoNoDisponible: hayConflicto.motivo,
+      motivoNoDisponible: hayConflicto.motivo as 'OCUPADO' | 'FUERA_TURNO' | 'BLOQUEO' | 'FUERA_HORARIO' | 'BUFFER',
     });
 
     horaActual = addMinutes(horaActual, 15); // Intervalos de 15 minutos

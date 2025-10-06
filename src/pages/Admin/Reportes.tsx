@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Users, Calendar, DollarSign, Clock, Download, Filter, RefreshCw } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, Calendar, DollarSign, Clock, Download, RefreshCw } from 'lucide-react';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { formatearFechaChile } from '../../lib/time';
 import type { ReporteEstadisticas } from '../../types/domain';
 
@@ -129,19 +130,15 @@ export function AdminReportes() {
     // Aquí iría la lógica real de exportación
   };
 
-  const formatearMoneda = (cantidad: number) => {
+  const formatearPesos = (valor: number) => {
     return new Intl.NumberFormat('es-CL', {
       style: 'currency',
       currency: 'CLP',
-    }).format(cantidad);
+      minimumFractionDigits: 0,
+    }).format(valor);
   };
 
-  const calcularPorcentajeCambio = (actual: number, anterior: number) => {
-    if (anterior === 0) return 0;
-    return ((actual - anterior) / anterior * 100);
-  };
-
-  if (!estadisticas) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
@@ -274,7 +271,7 @@ export function AdminReportes() {
         </div>
 
         {/* Vista Resumen General */}
-        {vistaActiva === 'resumen' && (
+        {vistaActiva === 'resumen' && estadisticas && (
           <div className="space-y-8">
             {/* KPIs principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -317,7 +314,7 @@ export function AdminReportes() {
                   <div>
                     <p className="text-sm font-medium text-slate-600">Ingresos Totales</p>
                     <p className="text-2xl font-bold text-slate-900">
-                      {formatearMoneda(estadisticas.resumenGeneral.ingresosTotales)}
+                      {formatearPesos(estadisticas.resumenGeneral.ingresosTotales)}
                     </p>
                   </div>
                   <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -372,7 +369,7 @@ export function AdminReportes() {
                       </div>
                       <div className="ml-4 text-right">
                         <div className="text-sm font-medium text-slate-900">
-                          {formatearMoneda(servicio.ingresos)}
+                          {formatearPesos(servicio.ingresos)}
                         </div>
                         <div className="text-xs text-slate-500">{servicio.porcentaje}%</div>
                       </div>
@@ -408,7 +405,7 @@ export function AdminReportes() {
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-slate-900">
-                        {formatearMoneda(profesional.ingresos)}
+                        {formatearPesos(profesional.ingresos)}
                       </div>
                     </div>
                   </div>
@@ -419,7 +416,7 @@ export function AdminReportes() {
         )}
 
         {/* Vista de Citas */}
-        {vistaActiva === 'citas' && (
+        {vistaActiva === 'citas' && estadisticas && (
           <div className="space-y-8">
             {/* Estadísticas de citas */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -511,7 +508,7 @@ export function AdminReportes() {
         )}
 
         {/* Vista de Ingresos */}
-        {vistaActiva === 'ingresos' && (
+        {vistaActiva === 'ingresos' && estadisticas && (
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="p-6 border-b border-slate-200">
@@ -528,7 +525,7 @@ export function AdminReportes() {
                           style={{ width: `${(mes.ingresos / Math.max(...estadisticas.ingresosPorMes.map(m => m.ingresos))) * 100}%` }}
                         >
                           <span className="text-white text-xs font-medium">
-                            {formatearMoneda(mes.ingresos)}
+                            {formatearPesos(mes.ingresos)}
                           </span>
                         </div>
                       </div>
@@ -541,7 +538,7 @@ export function AdminReportes() {
         )}
 
         {/* Vista de Utilización */}
-        {vistaActiva === 'utilizacion' && (
+        {vistaActiva === 'utilizacion' && estadisticas && (
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="p-6 border-b border-slate-200">
@@ -571,7 +568,7 @@ export function AdminReportes() {
         )}
 
         {/* Vista de Pacientes */}
-        {vistaActiva === 'pacientes' && (
+        {vistaActiva === 'pacientes' && estadisticas && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow-sm border p-6">

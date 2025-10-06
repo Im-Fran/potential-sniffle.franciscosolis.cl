@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { User, Phone, Mail, CreditCard } from 'lucide-react';
+import { User } from 'lucide-react';
 import { validarRut, aplicarMascaraRut } from '../lib/rut';
 
 const pacienteFormSchema = z.object({
@@ -22,9 +22,9 @@ const pacienteFormSchema = z.object({
     .optional()
     .or(z.literal('')),
 
-  prevision: z.enum(['Fonasa', 'Isapre', 'Particular'], {
-    required_error: 'Selecciona tu previsión'
-  }),
+  prevision: z.string()
+    .min(1, 'Selecciona tu previsión')
+    .refine((val) => ['Fonasa', 'Isapre', 'Particular'].includes(val), 'Previsión inválida'),
 
   notas: z.string().optional(),
 });

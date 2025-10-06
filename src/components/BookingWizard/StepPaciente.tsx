@@ -24,9 +24,9 @@ const pacienteSchema = z.object({
     .email('Email inválido')
     .max(255, 'El email no puede exceder 255 caracteres'),
 
-  prevision: z.enum(['Fonasa', 'Isapre', 'Particular'], {
-    required_error: 'Selecciona tu previsión'
-  }),
+  prevision: z.string()
+    .min(1, 'Selecciona tu previsión')
+    .refine((val) => ['Fonasa', 'Isapre', 'Particular'].includes(val), 'Previsión inválida'),
 
   notas: z.string()
     .max(500, 'Las notas no pueden exceder 500 caracteres')
@@ -75,7 +75,10 @@ export function StepPaciente({ reservaData, updateReservaData, nextStep }: StepP
     const { aceptaTerminos, aceptaPoliticaCancelacion, ...pacienteData } = data;
 
     updateReservaData({
-      paciente: pacienteData
+      paciente: {
+        ...pacienteData,
+        prevision: pacienteData.prevision as 'Fonasa' | 'Isapre' | 'Particular'
+      }
     });
 
     nextStep();

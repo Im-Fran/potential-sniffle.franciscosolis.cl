@@ -1,5 +1,4 @@
 import type { Cita } from '../types/domain';
-import { formatearFechaChile } from './time';
 
 interface DatosCitaICS {
   profesional: string;

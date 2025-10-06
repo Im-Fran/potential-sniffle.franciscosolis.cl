@@ -19,7 +19,7 @@ export function StepHora({ reservaData, updateReservaData, nextStep }: StepHoraP
     !!(reservaData.profesional && reservaData.fecha && reservaData.servicio)
   );
 
-  const handleHoraSelect = (horaInicio: string, horaFin: string) => {
+  const handleHoraSelect = (horaInicio: string) => {
     updateReservaData({
       hora: horaInicio,
     });

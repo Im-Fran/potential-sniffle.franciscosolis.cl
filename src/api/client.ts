@@ -4,7 +4,6 @@ import type {
   Servicio,
   Cita,
   DisponibilidadSlot,
-  Usuario,
   ID
 } from '../types/domain';
 

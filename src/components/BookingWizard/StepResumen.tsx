@@ -4,7 +4,7 @@ import { Check, Calendar, Clock, MapPin, User, FileText, Download, ExternalLink 
 import { useGestionReserva, useSucursal, useProfesional, useServicios } from '@/hooks/useApi.ts';
 import { LoadingSpinner } from '../LoadingSpinner';
 import { formatearFechaChile } from '@/lib/time.ts';
-import { descargarArchivoICS, generarEnlaceGoogleCalendar } from '@/lib/ics.ts';
+import {descargarArchivoICS, generarArchivoICS, generarEnlaceGoogleCalendar} from '@/lib/ics.ts';
 import type { ReservaStep, EstadoCita } from '@/types/domain.ts';
 
 interface StepResumenProps {
@@ -59,13 +59,24 @@ export function StepResumen({ reservaData }: StepResumenProps) {
 
   const handleDescargarICS = () => {
     if (citaConfirmada && sucursal && profesional && servicio) {
-      descargarArchivoICS(citaConfirmada, sucursal, profesional, servicio);
+      const contenidoICS = generarArchivoICS(citaConfirmada, {
+        profesional: profesional.nombre,
+        servicio: servicio.nombre,
+        sucursal: sucursal.nombre,
+        direccion: sucursal.direccion,
+      });
+      descargarArchivoICS(contenidoICS, `cita-${citaConfirmada.codigo}.ics`);
     }
   };
 
-  const handleAgregarAGoogle = () => {
+  const handleGoogleCalendar = () => {
     if (citaConfirmada && sucursal && profesional && servicio) {
-      const url = generarEnlaceGoogleCalendar(citaConfirmada, sucursal, profesional, servicio);
+      const url = generarEnlaceGoogleCalendar(citaConfirmada, {
+        profesional: profesional.nombre,
+        servicio: servicio.nombre,
+        sucursal: sucursal.nombre,
+        direccion: sucursal.direccion,
+      });
       window.open(url, '_blank');
     }
   };
@@ -130,7 +141,7 @@ export function StepResumen({ reservaData }: StepResumenProps) {
             </button>
 
             <button
-              onClick={handleAgregarAGoogle}
+              onClick={handleGoogleCalendar}
               className="flex items-center justify-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition-colors"
             >
               <ExternalLink className="w-4 h-4" />

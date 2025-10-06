@@ -4,7 +4,7 @@ import { Search, Calendar, MapPin, User, Clock, Phone, Mail, Edit3, X, Download 
 import { useCitaPorCodigo, useCancelarCita, useSucursal, useProfesional, useServicios } from '../hooks/useApi';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { formatearFechaChile, puedeModificarCita } from '../lib/time';
-import { descargarArchivoICS } from '../lib/ics';
+import {descargarArchivoICS, generarArchivoICS} from '../lib/ics';
 import type { Cita } from '../types/domain';
 
 export function BookingLookup() {
@@ -42,7 +42,7 @@ export function BookingLookup() {
       try {
         await cancelarCita.mutateAsync(cita.id);
         refetch();
-      } catch (error) {
+      } catch {
         alert('Error al cancelar la cita. Intenta nuevamente.');
       }
     }
@@ -50,7 +50,13 @@ export function BookingLookup() {
 
   const handleDescargarICS = () => {
     if (cita && sucursal && profesional && servicio) {
-      descargarArchivoICS(cita, sucursal, profesional, servicio);
+      const contenidoICS = generarArchivoICS(cita, {
+        profesional: profesional.nombre,
+        servicio: servicio.nombre,
+        sucursal: sucursal.nombre,
+        direccion: sucursal.direccion,
+      });
+      descargarArchivoICS(contenidoICS, `cita-${cita.codigo}.ics`);
     }
   };
 
@@ -106,12 +112,12 @@ export function BookingLookup() {
                     value={codigoBusqueda}
                     onChange={(e) => {
                       // Permitir solo letras, números y guiones, convertir a mayúsculas
-                      const valor = e.target.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+                      const valor = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
                       setCodigoBusqueda(valor);
                     }}
                     className="flex-1 px-4 py-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg"
                     placeholder="Ej: DEN-2025-001001"
-                    maxLength={15}
+                    maxLength={14}
                   />
                   <button
                     type="submit"

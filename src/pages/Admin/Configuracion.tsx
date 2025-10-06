@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Settings, Save, RefreshCw, Bell, Clock, Calendar, AlertCircle, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Settings, Save, RefreshCw, Bell, Clock, Calendar, Palette, Shield, AlertCircle, CheckCircle } from 'lucide-react';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
-import type { ConfiguracionSistema } from '../../types/domain';
 
 const configuracionSchema = z.object({
   general: z.object({
@@ -54,10 +53,9 @@ export function AdminConfiguracion() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
-    setValue,
+    formState: { errors, isValid },
+    reset,
     watch,
-    reset
   } = useForm<ConfiguracionFormData>({
     resolver: zodResolver(configuracionSchema),
     defaultValues: {
@@ -779,7 +777,7 @@ export function AdminConfiguracion() {
 
             <button
               type="submit"
-              disabled={!isDirty || isSaving}
+              disabled={!isValid || isSaving}
               className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
             >
               {isSaving ? (

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Filter, Search, Clock, User, MapPin, Edit3, X, Check } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Search, Clock, User, Edit3, X, Check } from 'lucide-react';
 import { format, addDays, subDays, startOfWeek, addWeeks, subWeeks } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { formatearFechaChile, obtenerFechaHoyChile } from '../../lib/time';
 import { CrearCitaAdmin } from '../Admin/CrearCitaAdmin';
 
@@ -238,8 +237,9 @@ export function AdminAgenda() {
     setMostrarDetallesCita(false);
   };
 
-  const handleNuevaCitaExitosa = (nuevaCita: any) => {
-    cargarCitas(); // Recargar la lista de citas
+  const handleNuevaCitaExitosa = () => {
+    // Actualizar calendario recargando los datos
+    cargarCitas();
   };
 
   return (

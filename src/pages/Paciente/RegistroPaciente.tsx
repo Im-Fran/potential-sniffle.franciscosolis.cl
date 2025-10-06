@@ -186,12 +186,12 @@ export function RegistroPaciente() {
 
   const nextStep = async () => {
     const fieldsToValidate = currentStep === 1
-      ? ['nombre', 'rut', 'email', 'telefono', 'fechaNacimiento', 'prevision']
+      ? ['nombre', 'rut', 'email', 'telefono', 'fechaNacimiento', 'prevision'] as const
       : currentStep === 2
-      ? ['password', 'confirmPassword']
+      ? ['password', 'confirmPassword'] as const
       : [];
 
-    const isStepValid = await trigger(fieldsToValidate);
+    const isStepValid = await trigger(fieldsToValidate as any);
     if (isStepValid) {
       setCurrentStep(prev => Math.min(prev + 1, 3));
     }

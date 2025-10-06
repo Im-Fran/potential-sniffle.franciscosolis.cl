@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { Calendar, Clock, MapPin, User, Phone, Mail, Edit3, Plus, Search, Filter, LogOut, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Phone, Mail, Edit3, Plus, Search, LogOut, CheckCircle, AlertCircle } from 'lucide-react';
 import { formatearFechaChile } from '../../lib/time';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 

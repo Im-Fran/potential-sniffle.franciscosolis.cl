@@ -51,7 +51,7 @@ export class ErrorBoundary extends React.Component<
               ha sido notificado y trabajamos para solucionarlo.
             </p>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="text-left bg-slate-50 rounded-lg p-4 mb-6">
                 <summary className="cursor-pointer font-medium text-slate-700 mb-2">
                   Detalles del error (desarrollo)
